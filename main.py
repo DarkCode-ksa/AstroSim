@@ -1,32 +1,29 @@
-from core.parser import load_config
-from core.validator import validate_simulation
-from core.dispatcher import dispatch_simulation
+import os
+from parser import load_config
+from dispatcher import run_simulation
 
 def main():
-    print("🔭 AstroSim – منصة المحاكاة الفلكية والجيوفيزيائية\n")
-    simulations = load_config("config.ini")
-    log = []
+    print("🔭 بدء تشغيل AstroSim...")
 
+    # تحديد مسار ملف الإعدادات
+    config_path = os.path.join(os.path.dirname(__file__), 'config.ini')
+
+    # تحميل إعدادات المحاكاة
+    simulations = load_config(config_path)
+
+    if not simulations:
+        print("⚠️ لم يتم العثور على محاكيات صالحة في config.ini")
+        return
+
+    # تنفيذ كل محاكاة
     for sim in simulations:
-        sim_type = sim.get("type", "").strip().lower()
-        sim_name = sim.get("name", "غير معروفة")
-
-        print(f"\n🧪 تشغيل: {sim_name} ({sim_type})")
-
-        if not validate_simulation(sim):
-            log.append((sim_name, "❌ فشل التحقق"))
-            continue
-
+        print(f"\n🚀 تشغيل المحاكاة: {sim['name']} ({sim['type']})")
         try:
-            dispatch_simulation(sim)
-            log.append((sim_name, "✅ تم التنفيذ"))
+            run_simulation(sim)
         except Exception as e:
-            print(f"❌ خطأ أثناء التنفيذ: {e}")
-            log.append((sim_name, f"❌ خطأ: {e}"))
+            print(f"❌ خطأ أثناء تشغيل {sim['name']}: {e}")
 
-    print("\n📋 سجل المحاكيات:")
-    for name, status in log:
-        print(f"• {name}: {status}")
+    print("\n✅ تم الانتهاء من جميع المحاكيات.")
 
 if __name__ == "__main__":
     main()
