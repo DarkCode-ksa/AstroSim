@@ -1,3 +1,10 @@
+import sys
+import os
+
+# إضافة مسار المجلد الحالي إلى sys.path لضمان رؤية الملفات
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(current_dir)
+
 from alignment import run_alignment
 from inverse_alignment import run_inverse_alignment
 from distance import run_distance
