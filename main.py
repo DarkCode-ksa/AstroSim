@@ -7,8 +7,6 @@ def main():
 
     # تحديد مسار ملف الإعدادات
     config_path = os.path.join(os.path.dirname(__file__), 'config.ini')
-
-    # تحميل إعدادات المحاكاة
     simulations = load_config(config_path)
 
     if not simulations:
